@@ -5,3 +5,7 @@ run:
 # Clear content log file
 clear-log:
 	@echo "" > storage/logs/laravel.log
+
+# Clearthe routing cache
+clear-route-cache:
+	@php artisan route:cache
