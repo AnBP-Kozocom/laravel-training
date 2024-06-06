@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ExistUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreatePostRequest extends FormRequest
@@ -24,7 +25,7 @@ class CreatePostRequest extends FormRequest
         return [
             'title' => ['required', 'string'],
             'content' => ['required', 'string'],
-            'user_id' => ['required', 'numeric'],
+            'user_id' => ['required', 'numeric', new ExistUser],
         ];
     }
 }
