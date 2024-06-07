@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\DetailPostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
 
 class PostController extends Controller
 {
+    /**
+     * Migration data into the database
+     */
     public function migrate()
     {
         Post::factory()->count(5)->create();
@@ -19,23 +23,36 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * Show list post 
+     */
     public function index()
     {
         $posts = Post::with(['user:id,name'])->get();
 
         return response()->json([
             "message" => "success",
-            "data" => $posts
+            "data" =>  PostResource::collection($posts)
         ]);
     }
 
+
+    /**
+     * Show information of a post 
+     */
     public function show(Post $post)
     {
+        $res = $post->load(['user:id,name']);
         return response()->json([
-            'data' => $post
+            "message" => "success",
+            "data" => new PostResource($res)
         ]);
     }
 
+
+    /**
+     * Create a new post
+     */
     public function store(CreatePostRequest $request)
     {
         $validatedData = $request->validated();
@@ -49,7 +66,9 @@ class PostController extends Controller
         ]);
     }
 
-
+    /**
+     * Update post information
+     */
     public function update(UpdatePostRequest $request, Post $post)
     {
         $post->update([
@@ -62,11 +81,14 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * Delete a post
+     */
     public function destroy(Post $post)
     {
         Post::where('id', $post->id)->delete();
         return response()->json([
-                'message' => "delete successfully"
-            ]);
+            'message' => "delete successfully"
+        ]);
     }
 };

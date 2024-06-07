@@ -19,7 +19,7 @@ class UpdatePostRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->merge([
+                $this->merge([
             'id' => $this->post->id,
         ]);
     }

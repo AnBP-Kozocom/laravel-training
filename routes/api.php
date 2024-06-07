@@ -27,4 +27,3 @@ Route::prefix('posts')->group(function () {
     Route::delete('/{post}', [PostController::class, 'destroy']);
     Route::post('/migrate', [PostController::class, 'migrate']);
 });
-
