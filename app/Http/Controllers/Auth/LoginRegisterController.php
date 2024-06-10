@@ -20,7 +20,7 @@ class LoginRegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken($user->email)->plainTextToken;
         if (!$token) {
             return response()->json([
                 'status' => 'error',
@@ -28,18 +28,14 @@ class LoginRegisterController extends Controller
             ], 401);
         }
 
+        // set response
+        $data['user']= $user->makeHidden(['created_at', 'updated_at']);
+        $data['token'] = $token;
 
         return response()->json([
             'status' => 'success',
             'message' => "register successfully",
-            'data' => [
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ],
-                'token' => $token
-            ]
+            'data' => $data
         ]);
     }
 
@@ -50,9 +46,5 @@ class LoginRegisterController extends Controller
         } else {
             dd("login failed");
         };
-    }
-
-    private function getToken()
-    {
     }
 }
