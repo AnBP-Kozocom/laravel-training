@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +28,11 @@ Route::prefix('posts')->group(function () {
     Route::put('/{post}', [PostController::class, 'update']);
     Route::delete('/{post}', [PostController::class, 'destroy']);
     Route::post('/migrate', [PostController::class, 'migrate']);
+});
+
+
+
+Route::prefix('auth') -> group(function(){
+    Route::post('/register', [LoginRegisterController::class, 'register']);
+    Route::post('/login', [LoginRegisterController::class, 'login']);
 });
