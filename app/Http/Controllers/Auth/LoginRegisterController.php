@@ -6,20 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class LoginRegisterController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        // create a new user 
+        // create a new user
         $user =  User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // generate a plan text token 
+        // generate a plan text token
         $token = $this->createToken($user);
 
         // create the response array
@@ -37,31 +38,27 @@ class LoginRegisterController extends Controller
 
     public function login(LoginRequest $request)
     {
-        // find the user
-        $user = User::where('email', $request->email)->first();
-
         // check if user exists
+        $user = User::where('email', $request->email)->first();
         if (!$user) {
             return response()->json([
-                'status' => 'failed',
-                'message' => "User does not exist",
+                'message' => "User does not exist or is not registered",
             ], 404);
         }
 
         // check if password is correct
-        if (!Hash::check($request->password, $user->password)) {
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'status' => 'failed',
-                'message' => "Password is incorrect",
-            ]);
+                'message' => 'Password is incorrect',
+            ], 401);
         }
 
-        // generate a plan text token 
+        // generate a plan text token
         $token = $this->createToken($user);
+        
 
         // create the response array
         $response = [
-            'status' => 'success',
             'message' => "Login successfully",
             'data' => [
                 'token' => $token,
