@@ -31,6 +31,9 @@ class UpdatePostRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        info($this->route('post'));
+
         return [
             'id' => ['required', 'integer', 'exists:posts,id'],
             'title' => ['required', 'string'],

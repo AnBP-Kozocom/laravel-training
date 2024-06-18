@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePostRequest;
-use App\Http\Requests\DetailPostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use App\Models\User;
-use Exception;
+use App\Services\PostService;
 
 class PostController extends Controller
 {
+    public function __construct(private PostService $postService)
+    {
+    }
     /**
      * Migration data into the database
      */
@@ -30,11 +31,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['user:id,name'])->get();
-
+        $data = $this->postService->index();
         return response()->json([
             "message" => "success",
-            "data" =>  PostResource::collection($posts)
+            "data" =>  PostResource::collection($data)
         ]);
     }
 
@@ -44,7 +44,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $res = $post->load(['user:id,name']);
+
+
+        $res = $post->load(['user:id,name'])->where();
 
         return response()->json([
             "message" => "success",

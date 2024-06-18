@@ -23,13 +23,14 @@ class LoginRegisterController extends Controller
         // generate a plan text token
         $token = $this->createToken($user);
 
+
         // create the response array
         $response = [
             'message' => "register successfully",
             'data' => [
                 'user' => $user->makeHidden(['created_at', 'updated_at']),
                 'token' => $token,
-            ] 
+            ]
         ];
 
         return response()->json($response);
