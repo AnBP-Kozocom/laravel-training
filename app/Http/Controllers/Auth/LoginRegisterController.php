@@ -25,12 +25,11 @@ class LoginRegisterController extends Controller
 
         // create the response array
         $response = [
-            'status' => 'success',
             'message' => "register successfully",
             'data' => [
                 'user' => $user->makeHidden(['created_at', 'updated_at']),
                 'token' => $token,
-            ]
+            ] 
         ];
 
         return response()->json($response);
@@ -38,8 +37,10 @@ class LoginRegisterController extends Controller
 
     public function login(LoginRequest $request)
     {
-        // check if user exists
+        // find the user
         $user = User::where('email', $request->email)->first();
+
+        // check if user exists
         if (!$user) {
             return response()->json([
                 'message' => "User does not exist or is not registered",
@@ -55,7 +56,7 @@ class LoginRegisterController extends Controller
 
         // generate a plan text token
         $token = $this->createToken($user);
-        
+
 
         // create the response array
         $response = [

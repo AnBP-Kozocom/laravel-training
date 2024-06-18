@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
+use Exception;
 
 class PostController extends Controller
 {
@@ -24,6 +25,7 @@ class PostController extends Controller
     }
 
     /**
+     * Show list posts 
      * Show list post 
      */
     public function index()
@@ -43,6 +45,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $res = $post->load(['user:id,name']);
+
         return response()->json([
             "message" => "success",
             "data" => new PostResource($res)
