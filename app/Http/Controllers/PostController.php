@@ -7,7 +7,8 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class PostController extends Controller
 {
@@ -22,8 +23,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        $data = $this->postService->index();
-        return response()->ok(PostResource::collection($data));
+        $posts= Cache::remember('list_post', 60, function(){
+            return $this->postService->index();
+        });
+
+        // $data = $this->postService->index();
+        return response()->ok(PostResource::collection($posts));
+
+        return;
     }
 
     /**

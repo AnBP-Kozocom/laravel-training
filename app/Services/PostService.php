@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Requests\CreatePostRequest;
 use App\Repositories\PostRepositoryInterface;
 
 class PostService
