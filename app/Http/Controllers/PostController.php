@@ -7,53 +7,33 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
+use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
     public function __construct(private PostService $postService)
     {
     }
-    /**
-     * Migration data into the database
-     */
-    public function migrate()
-    {
-        Post::factory()->count(5)->create();
-
-        return response()->json([
-            "message" => "success",
-        ]);
-    }
-
+    
     /**
      * Show list posts 
-     * Show list post 
+     * 
+     * @return 
      */
     public function index()
-    {
+    {   
         $data = $this->postService->index();
-        return response()->json([
-            "message" => "success",
-            "data" =>  PostResource::collection($data)
-        ]);
+        return response()->ok(PostResource::collection($data));
     }
-
 
     /**
      * Show information of a post 
      */
     public function show(Post $post)
     {
-
-
-        $res = $post->load(['user:id,name'])->where();
-
-        return response()->json([
-            "message" => "success",
-            "data" => new PostResource($res)
-        ]);
+        $res = $post->load(['user:id,name']);
+        return response()->ok(new PostResource($res));
     }
-
 
     /**
      * Create a new post
@@ -74,7 +54,7 @@ class PostController extends Controller
     /**
      * Update post information
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
         $post->update([
             'title' => $request->title,
@@ -89,7 +69,7 @@ class PostController extends Controller
     /**
      * Delete a post
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): JsonResponse
     {
         Post::where('id', $post->id)->delete();
         return response()->json([

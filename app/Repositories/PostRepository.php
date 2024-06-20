@@ -5,44 +5,41 @@ namespace App\Repositories;
 use App\Models\Post;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class PostRepository
+class PostRepository implements PostRepositoryInterface
 {
+	public function __construct(private Post  $model)
+	{
+	}
 
-  public function __construct(private Post $model)
-  {
-  }
+	public function all()
+	{
+		return $this->model->all();
+	}
 
-  public function getAllBuilder($column = ['*']): Builder
-  {
-    return $this->model->query()->select($column)->whereDate('created_at', now());
-  }
+	public function findWithByRelation(array $relation)
+	{
+		return  $this->model->with($relation)->get();
+	}
 
+	public function findById($id)
+	{
+		return $this->model->findOrFail($id);
+	}
 
-  public function index()
-  {
-    return $this->model->all();
-  }
+	public function create(array $data)
+	{
+		return $this->model->create($data);
+	}
 
-  public function getWith( $relation = ['*'] )
-  {
-    return $this->model->all();
-  }
+	public function update(array $data, $id)
+	{
+		$post = $this->model->findOrFail($id);
+		$post->update($post);
+	}
 
-
-
-
-  public function GetByID($id)
-  {
-    return Post::findOrFail($id);
-  }
-
-  // public function getAllById()
-  // {
-  //   return $this->getAllBuilder()->whereCreatedAt(213)->all();
-  // }
-
-  // public function getAllByTitle()
-  // {
-  //   return $this->getAllBuilder()->whereUserId(213)->all();
-  // }
+	public function delete($id)
+	{
+		$post = $this->model->findOrFail($id);
+		$post->delete($post);
+	}
 }
