@@ -7,7 +7,6 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
