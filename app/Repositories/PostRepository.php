@@ -7,7 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class PostRepository implements PostRepositoryInterface
 {
-	public function __construct(private Post  $model)
+	public function __construct(private Post $model)
 	{
 	}
 
@@ -26,15 +26,16 @@ class PostRepository implements PostRepositoryInterface
 		return $this->model->findOrFail($id);
 	}
 
-	public function create(array $data)
+	public function insert(array $data)
 	{
-		return $this->model->create($data);
+		$this->model->fill($data);
+		return $this->model->save();
 	}
 
 	public function update(array $data, $id)
 	{
 		$post = $this->model->findOrFail($id);
-		$post->update($post);
+		$post->update($data);
 	}
 
 	public function delete($id)

@@ -14,14 +14,14 @@ class PostController extends Controller
     public function __construct(private PostService $postService)
     {
     }
-    
+
     /**
      * Show list posts 
      * 
      * @return 
      */
     public function index()
-    {   
+    {
         $data = $this->postService->index();
         return response()->ok(PostResource::collection($data));
     }
@@ -41,10 +41,7 @@ class PostController extends Controller
     public function store(CreatePostRequest $request)
     {
         $validatedData = $request->validated();
-
-        $post = new Post;
-        $post->fill($validatedData);
-        $post->save();
+        $this->postService->store($validatedData);
 
         return response()->json([
             "message" => "create success",
@@ -54,12 +51,10 @@ class PostController extends Controller
     /**
      * Update post information
      */
-    public function update(UpdatePostRequest $request, Post $post): JsonResponse
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->update([
-            'title' => $request->title,
-            'content' => $request->content,
-        ]);
+        $validatedData = $request->validated();
+        $this->postService->update($validatedData);
 
         return response()->json([
             'message' => "update successfully"
@@ -69,9 +64,9 @@ class PostController extends Controller
     /**
      * Delete a post
      */
-    public function destroy(Post $post): JsonResponse
+    public function destroy(Post $post)
     {
-        Post::where('id', $post->id)->delete();
+        $this->postService->destroy($post->id);
         return response()->json([
             'message' => "delete successfully"
         ]);

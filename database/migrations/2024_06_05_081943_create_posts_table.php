@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title', 155);
             $table->text('content');
             $table->unsignedBigInteger('user_id');
-            $table->timestamps();
+            $table->timestamps(); // Add created_at and updated_at columns 
 
             $table->foreign('user_id')
                 ->references('id')
