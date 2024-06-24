@@ -1,0 +1,8 @@
+- Each integer when it's stored on a computer, it's often expressed as 32 ones (we say that integer can be expressed with 32 bits) 
+  - A "bit" = 1 or 0
+  - Sample: 
+    - 1 -> 0000...01
+    - 2 -> 0000...10
+- Memory can be thought of as "a long tape if bytes"
+  - A "byte" = a small unit of data
+- Each integer is 4 bytes
